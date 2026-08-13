@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #1e1e2e;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 40px;
+  }
+  .terminal {
+    background: #181825;
+    border-radius: 12px;
+    padding: 24px 28px;
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #cdd6f4;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    max-width: 940px;
+    width: 100%;
+    border: 1px solid #313244;
+  }
+  .terminal .title-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 16px; border-bottom: 1px solid #313244;
+    margin-bottom: 16px;
+  }
+  .terminal .title-bar .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .terminal .title-bar .dot.r { background: #f38ba8; }
+  .terminal .title-bar .dot.y { background: #f9e2af; }
+  .terminal .title-bar .dot.g { background: #a6e3a1; }
+  .terminal .title-bar .title { margin-left: 12px; font-size: 13px; color: #6c7086; }
+  .terminal .line { white-space: pre; }
+  .terminal .highlight { color: #89b4fa; }
+  .terminal .green { color: #a6e3a1; }
+  .terminal .yellow { color: #f9e2af; }
+  .terminal .red { color: #f38ba8; }
+  .terminal .dim { color: #6c7086; }
+  .terminal .cyan { color: #89dceb; }
+  .terminal .bold { color: #cdd6f4; }
+  .terminal .sep { color: #45475a; }
+  .terminal .prompt { color: #a6adc8; }
+  .terminal .header { color: #f5e0dc; }
+</style>
+</head>
+<body>
+<div class="terminal">
+  <div class="title-bar">
+    <div class="dot r"></div>
+    <div class="dot y"></div>
+    <div class="dot g"></div>
+    <span class="title">irq-watch — Linux IRQ Monitor (C++23)</span>
+  </div>
+
+  <div class="line prompt">  $ ./irq-watch --top 6</div>
+  <div class="line bold">  IRQ WATCH — Linux interrupt monitor (/proc/interrupts)</div>
+  <div class="line sep">  ------------------------------------------------------------------------------</div>
+  <div class="line cyan">  TOP INTERRUPTS (6 of 23)</div>
+  <div class="line dim">   IRQ     NAME               CPU0     CPU1     CPU2     CPU3    TOTAL</div>
+  <div class="line"><span class="red">    LOC  Local timer interr    12.3G     9.9G     1.2G     9.9G    33.3G</span></div>
+  <div class="line"><span class="red">    130  PCI-MSI 327682-edg    76.6M   876.6M   987.7M   123.5M     2.1G</span></div>
+  <div class="line"><span class="red">     24  PCI-MSI 327680-edg   123.5M   987.7M   234.6M   123.5M     1.5G</span></div>
+  <div class="line"><span class="red">     27  PCI-MSI 524289-edg    98.8M   123.5M    87.7M   987.7M     1.3G</span></div>
+  <div class="line"><span class="yellow">      0  IR-IO-APIC 2-edge    212.9M   127.4M   123.5M    98.8M   562.6M</span></div>
+  <div class="line"><span class="yellow">    RES  Rescheduling inter    12.4M    23.5M    34.6M    45.7M   116.1M</span></div>
+  <div class="line"></div>
+  <div class="line cyan">  SUMMARY</div><div class="line">  irqs 23   cpus 4   total <span class="red">38.9G</span>   <span class="dim">busiest CPU 0</span></div>
+  <div class="line"></div>
+
+  <div class="line prompt">  $ ./irq-watch --json | python3 -m json.tool</div>
+  <div class="line sep">  {</div>
+  <div class="line">    <span class="cyan">"cpus"</span>: 4,</div>
+  <div class="line">    <span class="cyan">"irqs"</span>: [</div>
+  <div class="line">        {<span class="cyan">"irq"</span>: 0, <span class="cyan">"name"</span>: <span class="yellow">"IR-IO-APIC 2-edge timer"</span>, <span class="cyan">"counts"</span>: [212870536, 127398136, 123456789, 98765432], <span class="cyan">"total"</span>: 562490893},</div>
+  <div class="line">        {<span class="cyan">"irq"</span>: <span class="yellow">"LOC"</span>, <span class="cyan">"name"</span>: <span class="yellow">"Local timer interrupts"</span>, <span class="cyan">"counts"</span>: [12345678901, 9876543210, 1234567890, 9876543210], <span class="cyan">"total"</span>: 33383446411}</div>
+  <div class="line">    ],</div>
+  <div class="line">    <span class="cyan">"summary"</span>: {<span class="cyan">"irqs"</span>: 23, <span class="cyan">"cpus"</span>: 4, <span class="cyan">"total"</span>: <span class="yellow">"38.9G"</span>}</div>
+  <div class="line sep">  }</div>
+  <div class="line"></div>
+
+  <div class="line prompt">  $ ./irq-watch --watch 2</div>
+  <div class="line bold">  IRQ WATCH — Linux interrupt monitor (/proc/interrupts)</div>
+  <div class="line dim">  (live refresh every 2s — Ctrl+C to exit, rates in int/s)</div>
+  <div class="line cyan">  TOP INTERRUPTS (10 of 23)</div>
+  <div class="line dim">   IRQ     NAME               CPU0     CPU1     CPU2     CPU3    TOTAL</div>
+  <div class="line"><span class="red">      0  IR-IO-APIC 2-edge    45.2k    44.1k    43.8k    45.0k   178.1k</span></div>
+  <div class="line"><span class="yellow">     24  PCI-MSI 327680-edg    12.3k    11.9k    12.1k    11.8k    48.1k</span></div>
+  <div class="line"><span class="yellow">    130  PCI-MSI 327682-edg     9.8k    10.2k     9.9k    10.4k    40.3k</span></div>
+  <div class="line"><span class="yellow">    LOC  Local timer interr    8.9k     9.1k     8.8k     9.0k    35.8k</span></div>
+  <div class="line"><span class="yellow">    RES  Rescheduling inter    3.4k     3.6k     3.2k     3.5k    13.7k</span></div>
+  <div class="line"><span class="green">     27  PCI-MSI 524289-edg     412      388      401      395     1.6k</span></div>
+  <div class="line"><span class="green">     25  PCI-MSI 327681-edg     310      298      305      302     1.2k</span></div>
+  <div class="line"><span class="dim">      1  IR-IO-APIC 1-edge       12       15       11       14        52</span></div>
+  <div class="line"></div>
+  <div class="line cyan">  SUMMARY</div><div class="line">  irqs 23   cpus 4   total <span class="yellow">362.4k int/s</span>   <span class="dim">busiest CPU 0</span></div>
+  <div class="line"></div>
+
+  <div class="line prompt">  $ ./irq-watch --selftest</div>
+  <div class="line green">  PASS</div><div class="line">  parse synthetic /proc/interrupts</div>
+  <div class="line green">  PASS</div><div class="line">  named entry LOC (irq=-1)</div>
+  <div class="line green">  PASS</div><div class="line">  ERR single count padded with zeros</div>
+  <div class="line green">  PASS</div><div class="line">  continuation line merged into name</div>
+  <div class="line green">  PASS</div><div class="line">  delta rate = 150/s</div>
+  <div class="line green">  PASS</div><div class="line">  fmt_count 48700 -&gt; 48.7k</div>
+  <div class="line">  <span class="bold">19 passed, 0 failed</span>  <span class="dim">(1 skip: /proc no legible en contenedor)</span></div>
+  <div class="line dim">  ─────────────────────────────────────────────────────────────</div>
+  <div class="line dim">  Fuentes: /proc/interrupts · conteos por CPU · tasas delta en --watch · JSON</div>
+</div>
+</body>
+</html>
